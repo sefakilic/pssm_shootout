@@ -1,11 +1,9 @@
+#!/bin/env python
 """
 Python code for the shootout
 """
 import sys
-from math import log
-
-def log2(x):
-    return log(x,2)
+from utils import log2,transpose
 
 def parse_genome(genome_file):
     """
@@ -27,8 +25,6 @@ def make_pssm(binding_sites):
     Return the PSSM as a list of dictionaries of the form:
     [{A:a_val,...,T:t_val}]
     """
-    def transpose(xs):
-        return zip(*xs)
     cols = transpose(binding_sites)
     n = float(len(binding_sites))
     return [{b:log2(((col.count(b)+1)/(n+4))/0.25)
