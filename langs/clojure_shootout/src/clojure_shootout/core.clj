@@ -1,6 +1,7 @@
 (ns clojure_shootout.core
   (:gen-class))
 (use '[clojure.string :only (split)])
+(load "utils")
 
 (defn parse-genome
   "Return genome as string"
@@ -18,32 +19,6 @@
       slurp
       (split #"\n")))
 
-(defn transpose
-  [xxs]
-  (apply mapv vector xxs))
-
-(defn zip [xs ys]
-  (transpose [xs ys]))
-
-(defmacro hash-for-ref
-  "Dictionary comprehension"
-  [seq-expr body-expr]
-  `(let [list-comp# (for ~seq-expr ~body-expr)
-         ]
-     (apply hash-map (apply concat list-comp#))))
-
-(defmacro hash-for
-  "Dictionary comprehension"
-  [seq-expr body-expr]
-  `(let [list-comp# (for ~seq-expr ~body-expr)
-         ]
-     (apply zipmap (transpose list-comp#))))
-
-(def ln2 (Math/log 2))
-
-(defn log2 [x]
-  (/ (Math/log x) ln2))
-
 (defn make-pssm
   "make PSSM from binding sites"
   [binding-sites]
@@ -54,9 +29,6 @@
                 [b (log2 (/ (float (/ (+ (count (filter (fn [x] (= x b)) col)) 1)
                                       (+ n 4)))
                             0.25))]))))
-
-(defn sum [xs]
-  (apply + xs))
 
 
 (defn score
@@ -77,9 +49,10 @@
   [& args]
   (let [genome-file (first args)
         binding-site-file (second args)
+        results-file (third args)
         genome (parse-genome genome-file)
         binding-sites (parse-binding-sites binding-site-file)
         pssm (make-pssm binding-sites)
         scores (slide-score pssm genome)]
-    (spit "shootout_clojure_results.txt"
+    (spit results-file
           (clojure.string/join "\n" scores))))
