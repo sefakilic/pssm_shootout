@@ -25,6 +25,7 @@
 
   - C
   - Python
+  - Haskell
   - Common Lisp (SBCL)
   - Scheme
   - Clojure
