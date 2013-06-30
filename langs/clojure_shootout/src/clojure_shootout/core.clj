@@ -1,24 +1,22 @@
-(ns clojure-shootout.core
+(ns clojure_shootout.core
   (:gen-class))
 (use '[clojure.string :only (split)])
 
 (defn parse-genome
   "Return genome as string"
-  []; no arguments
-  (let [genome-file "../../data/NC000913.fna"]
-    (->> genome-file
-         slurp
-         (drop-while (fn [c] (not (= c \newline))))
-         (filter (fn [c] (some #{c} "ACGT")))
-         (apply str))));hackish!
+  [genome-file]                         
+  (->> genome-file
+       slurp
+       (drop-while (fn [c] (not (= c \newline))))
+       (filter (fn [c] (some #{c} "ACGT")))
+       (apply str)))
 
 (defn parse-binding-sites
   "return binding sites as list of strings"
-  []; no args
-  (let [binding-site-file "../../data/binding_sites.txt"]
-    (-> binding-site-file
-        slurp
-        (split #"\n"))))
+  [binding-site-file]                 
+  (-> binding-site-file
+      slurp
+      (split #"\n")))
 
 (defn transpose
   [xxs]
@@ -74,10 +72,13 @@
       (score pssm (subs genome i (+ i width))))))
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Parse the genome file and binding sites, create the PSSM, score the
+  genome and save the results"
   [& args]
-  (let [genome (parse-genome)
-        binding-sites (parse-binding-sites)
+  (let [genome-file (first args)
+        binding-site-file (second args)
+        genome (parse-genome genome-file)
+        binding-sites (parse-binding-sites binding-site-file)
         pssm (make-pssm binding-sites)
         scores (slide-score pssm genome)]
     (spit "shootout_clojure_results.txt"
