@@ -33,3 +33,10 @@
   This repo is obviously a work in progress.  Critical comments that
   suggest improvements, especially in the form of more natural idioms,
   are welcome.
+
+* Usage
+  From the top-level directory, type:
+
+: make all
+
+  to run each solution.
