@@ -1,14 +1,14 @@
 
 * Introduction
   If you have ever been curious about the performance characteristics
-  of various programming languages, you may be familiar with the
-  benchmarking game at alioth.debian.org.  If you have ever browsed
-  the source of highly-ranked submissions, you may also be familiar
-  with the style of these programs, which is remarkably constant
-  across languages: winning programs on the shootout frankly read like
-  they were written in outer space.  The results of the shootout show
-  how /extremely esoteric/ programs perform, not how /typical/
-  programs perform.  
+  of various programming languages, you may be familiar with the [[http://benchmarksgame.alioth.debian.org/][The
+  Computer Languages Benchmarking Game]].  If you have ever browsed the
+  source of highly-ranked submissions, you may also be familiar with
+  the style of these programs, which is remarkably constant across
+  languages: winning programs on the shootout frankly read like they
+  were written from outer space.  The results of the shootout show how
+  /extremely esoteric/ programs perform, not how /typical/ programs
+  perform.
 
   To that end, I've decided to perform my own shootout for the
   purposes of honest comparison and personal enrichment.  The task is
@@ -17,7 +17,7 @@
   - parse the /E. coli/ genome and 
   - a list of transcription factor binding sites, 
   - construct a PSSM with the latter, 
-  - score the  entire genome with the PSSM, and
+  - score the (forward strand of the) entire genome with the PSSM, and
   - print the results to a file.
 
   The languages chosen for implementation are:
@@ -27,3 +27,7 @@
   - Common Lisp (SBCL)
   - Scheme
   - Clojure
+
+  This repo is obviously a work in progress.  Critical comments that
+  suggest improvements, especially in the form of more natural idioms,
+  are welcome.
