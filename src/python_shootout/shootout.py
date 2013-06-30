@@ -10,7 +10,7 @@ def parse_genome():
     """
     Return the genome as string
     """
-    genome_file = "../../data/NC_000913.fna"
+    genome_file = "../../data/NC000913.fna"
     with open(genome_file) as f:
         genome = "".join([line.strip() for line in f.readlines()[1:]])
         # contains other iupac symbols
