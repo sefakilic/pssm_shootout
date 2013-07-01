@@ -1,7 +1,6 @@
 (ns clojure_shootout.core
-  (:gen-class))
-(use '[clojure.string :only (split)])
-(load "utils")
+  (:require [clojure.string :as s]
+            [clojure_shootout.utils :refer :all]))
 
 (defn parse-genome
   "Return genome as string"
@@ -9,7 +8,7 @@
   (->> genome-file
        slurp
        (drop-while (fn [c] (not (= c \newline))))
-       (filter (fn [c] (some #{c} "ACGT")))
+       (filter (set "ACGT"))
        (apply str)))
 
 (defn parse-binding-sites
@@ -17,7 +16,7 @@
   [binding-site-file]                 
   (-> binding-site-file
       slurp
-      (split #"\n")))
+      (s/split #"\n")))
 
 (defn make-pssm
   "make PSSM from binding sites"
@@ -30,18 +29,21 @@
                                       (+ n 4)))
                             0.25))]))))
 
-
 (defn score
   "Score site with pssm"
   [pssm site]
-  (sum (for [[col-hash c] (zip pssm site)] (col-hash c))))
+  (reduce (fn [acc [col-hash c]]
+            (+ acc (long (col-hash c))))
+          0
+          (timek :zip (zip pssm site))))
 
 (defn slide-score
   "Score genome by pssm via sliding-window"
   [pssm genome]
   (let [width (count pssm)]
-    (for [i (range (+ (count genome) (- width) 1))]
-      (score pssm (subs genome i (+ i width))))))
+    (for [i (range (+ (count genome) (- width) 1))
+          :let [site (subs genome i (+ i width))]]
+      (score pssm site))))
 
 (defn -main
   "Parse the genome file and binding sites, create the PSSM, score the
@@ -50,9 +52,14 @@
   (let [genome-file (first args)
         binding-site-file (second args)
         results-file (third args)
-        genome (parse-genome genome-file)
+        genome (doall (parse-genome genome-file))
         binding-sites (parse-binding-sites binding-site-file)
-        pssm (make-pssm binding-sites)
-        scores (slide-score pssm genome)]
+        pssm (doall (make-pssm binding-sites))
+        _ (println "Slide-score")
+        scores (time (doall (slide-score pssm genome)))]
     (spit results-file
-          (clojure.string/join "\n" scores))))
+          (s/join "\n" scores))))
+
+(comment
+  (with-timek (timek :main (-main "../../data/NC000913.fna" "../../data/binding_sites.txt" "../../results/clojure_results.txt")))
+ )

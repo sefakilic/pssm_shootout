@@ -1,3 +1,5 @@
+(ns clojure_shootout.utils)
+
 (defn transpose
   [xxs]
   (apply mapv vector xxs))
@@ -18,7 +20,27 @@
   (/ (Math/log x) ln2))
 
 (defn sum [xs]
-  (apply + xs))
+  (reduce + xs))
 
 (defn third [xs]
   (nth xs 2))
+
+(def ^:dynamic *times* nil)
+
+(defmacro timek
+  "Evaluates expr and prints the time it took.  Returns the value of
+ expr."
+  {:added "1.0"}
+  [k expr]
+  (let [plus (fn [val val2] (if val (+ val val2) val2))]
+    `(let [start# (. System (nanoTime))
+           ret# ~expr
+           t# (/ (double (- (. System (nanoTime)) start#)) 1000000.0)]
+       (swap! *times* update-in [~k] ~plus t#)
+       ret#)))
+
+(defmacro with-timek
+  [& body]
+  `(binding [*times* (atom {})]
+     ~@body
+     (clojure.pprint/pprint @*times*)))
