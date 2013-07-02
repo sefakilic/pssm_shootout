@@ -14,4 +14,4 @@ langs/clojure_shootout/target/clojure_shootout-0.1.0-SNAPSHOT-standalone.jar:lan
 results/clojure_results.txt: langs/clojure_shootout/target/clojure_shootout-0.1.0-SNAPSHOT-standalone.jar
 	time java -jar langs/clojure_shootout/target/clojure_shootout-0.1.0-SNAPSHOT-standalone.jar data/NC000913.fna data/binding_sites.txt results/clojure_results.txt
 
-all:  results/clojure_results.txt
+all: results/python_results.txt results/clojure_results.txt

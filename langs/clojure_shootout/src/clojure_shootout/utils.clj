@@ -10,8 +10,7 @@
 (defmacro hash-for
   "Dictionary comprehension.  Usage:(hash-for [x xs] [key-expr val-expr])"
   [seq-expr body-expr]
-  `(let [list-comp# (for ~seq-expr ~body-expr)
-         ]
+  `(let [list-comp# (for ~seq-expr ~body-expr)]
      (apply zipmap (transpose list-comp#))))
 
 (def ln2 (Math/log 2))
@@ -20,7 +19,7 @@
   (/ (Math/log x) ln2))
 
 (defn sum [xs]
-  (reduce + xs))
+  (reduce + xs)) ;; better than (apply + xs)
 
 (defn third [xs]
   (nth xs 2))

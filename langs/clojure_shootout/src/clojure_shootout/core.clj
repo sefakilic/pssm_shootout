@@ -31,18 +31,22 @@
 
 (defn score
   "Score site with pssm"
+  ;; refactored by gtrak -- reduce beats sum?
   [pssm site]
   (reduce (fn [acc [col-hash c]]
             (+ acc (long (col-hash c))))
           0
-          (timek :zip (zip pssm site))))
+          (zip pssm site)))
 
 (defn slide-score
   "Score genome by pssm via sliding-window"
   [pssm genome]
   (let [width (count pssm)]
+    ;gtrak showed me this nice little piece of syntax for the for
+    ;macro: the let keyword.  Haskell has similar syntax for let in
+    ;list comps; would be nice to see it in Python one day.
     (for [i (range (+ (count genome) (- width) 1))
-          :let [site (subs genome i (+ i width))]]
+          :let [site (subs genome i (+ i width))]] 
       (score pssm site))))
 
 (defn -main
@@ -52,11 +56,12 @@
   (let [genome-file (first args)
         binding-site-file (second args)
         results-file (third args)
+        ;; doall forces evaluation of lazy seq.  Thanks to gtrak for improvement.
         genome (doall (parse-genome genome-file))
         binding-sites (parse-binding-sites binding-site-file)
         pssm (doall (make-pssm binding-sites))
-        _ (println "Slide-score")
-        scores (time (doall (slide-score pssm genome)))]
+        _ (println "Slide-score") ;;nonce assignment for timing
+        scores (doall (slide-score pssm genome))]
     (spit results-file
           (s/join "\n" scores))))
 
