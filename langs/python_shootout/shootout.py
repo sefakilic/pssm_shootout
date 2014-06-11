@@ -46,7 +46,7 @@ if __name__ == "__main__":
     genome = parse_genome(genome_file)
     binding_sites = parse_binding_sites(binding_site_file)
     pssm = make_pssm(binding_sites)
-    with open("shootout_python_results.txt",'w') as f:
+    with open(results_file,'w') as f:
         f.write("\n".join(map(str,sliding_score(pssm,genome))))
 
 
