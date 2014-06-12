@@ -18,4 +18,12 @@ results/clojure_results.txt: langs/clojure_shootout/target/clojure_shootout-0.1.
 results/julia_results.txt:langs/julia_shootout/
 	time julia langs/julia_shootout/shootout.jl data/NC000913.fna data/binding_sites.txt results/julia_results.txt
 
+#C
+c_shootout:langs/c_shootout
+	cd langs/c_shootout/; gcc shootout.c -ansi -lm -O3;	cd ../..
+
+results/c_results.txt:langs/c_shootout/a.out
+	time langs/c_shootout/a.out data/NC000913.fna data/binding_sites.txt results/c_results.txt
+
 all: results/python_results.txt results/clojure_results.txt
+
